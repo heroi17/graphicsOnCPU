@@ -60,6 +60,7 @@ namespace bufferLib
 		void	blitPix(int xPos, int yPos, color putColor);
 
 		// If you want to change a non-specific pixel. This changes a few pixels near the position. It cost a lot bigger to use then with int cords.
+		// If you want to change a non-specific pixel. This changes a few pixels near the position. It cost a lot bigger to use then with int cords.
 		void	blitPix(float xPos, float yPos, color putColor);
 
 		// get pixel, if it's out of range, then it returns an outOfRangePixel_.
@@ -140,8 +141,29 @@ namespace bufferLib
 	}
 
 	// If you want to change a non-specific pixel. This changes a few pixels near the position. It cost a lot bigger to use then with int cords.
+	// If you want to change a non-specific pixel. This changes a few pixels near the position. It cost a lot bigger to use then with int cords.
+	template<>
+	void Buffer2D<colorLib::RGBA8>::blitPix(float xPos, float yPos, colorLib::RGBA8 putColor)
+	{
+		// Let 0, 0 it's the center of the pixel buffer_(0, 0).
+		int xPosInt = (int)(xPos);
+		float xPart = xPos - xPosInt;
+		int yPosInt = (int)(yPos);
+		float yPart = yPos - yPosInt;
+		// Mull color by S of (square overlap the pixels).
+		colorLib::RGBA8 helper;
+		helper = putColor.mulAlpha((1.f - xPart) * (1.f - yPart));
+		(*this)(xPosInt, yPosInt).merge(helper);
+		helper = putColor.mulAlpha((xPart) * (1.f - yPart));
+		(*this)(xPosInt + 1.f, yPosInt).merge(helper);
+		helper = putColor.mulAlpha((1 - xPart) * (yPart));
+		(*this)(xPosInt, yPosInt + 1.f).merge(helper);
+		helper = putColor.mulAlpha((xPart) * (yPart));
+		(*this)(xPosInt + 1.f, yPosInt + 1.f).merge(helper);
+		// There are sum of area = 1.
+	}
 	template<typename color>
-	void Buffer2D<color>::blitPix(float xPos, float yPos, color putColor)
+	inline void Buffer2D<color>::blitPix(float xPos, float yPos, color putColor)
 	{
 		//TODO: change it like: make rgba8 merge with our putColor and then put it back.
 		// But now we have this:
@@ -240,28 +262,6 @@ namespace bufferLib
 			printf("\n");
 		}
 	}
-
-	template<>
-	void Buffer2D<colorLib::RGBA8>::blitPix(float xPos, float yPos, colorLib::RGBA8 putColor)
-	{
-		// Let 0, 0 it's the center of the pixel buffer_(0, 0).
-		int xPosInt = (int)(xPos);
-		float xPart = xPos - xPosInt;
-		int yPosInt = (int)(yPos);
-		float yPart = yPos - yPosInt;
-		// Mull color by S of (square overlap the pixels).
-		colorLib::RGBA8 helper;
-		helper = putColor.mulAlpha((1.f - xPart) * (1.f - yPart));
-		(*this)(xPosInt, yPosInt).merge(helper);
-		helper = putColor.mulAlpha((xPart) * (1.f - yPart));
-		(*this)(xPosInt + 1.f, yPosInt).merge(helper);
-		helper = putColor.mulAlpha((1 - xPart) * (yPart));
-		(*this)(xPosInt, yPosInt + 1.f).merge(helper);
-		helper = putColor.mulAlpha((xPart) * (yPart));
-		(*this)(xPosInt + 1.f, yPosInt + 1.f).merge(helper);
-		// There are sum of area = 1.
-	}
-
 
 
 }
