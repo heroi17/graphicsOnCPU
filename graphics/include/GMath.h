@@ -33,6 +33,7 @@ namespace gMathLib
 		TYPE x_ = 0;
 		TYPE y_ = 0;
 
+		Vector2D() {};
 
 		Vector2D(TYPE x, TYPE y) : x_(x), y_(y) {};
 
@@ -46,6 +47,8 @@ namespace gMathLib
 		template <typename TYPEKOEF>
 		Vector2D<TYPE> operator*(const TYPEKOEF& koef) const;
 
+		bool operator==(const Vector2D& other) const { return this->x_ == other.x_ and this->y_ == other.y_; }
+		bool operator!=(const Vector2D& other) const { return this->x_ != other.x_ or this->y_ != other.y_; }
 		void normalize();
 
 		double getLength();

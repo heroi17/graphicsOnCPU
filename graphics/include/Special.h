@@ -79,12 +79,10 @@ namespace specialLib
 
 	}
 
-	//TODO: blit by angle
 
 	template<typename buf>
 	void changeResolution(buf& changedBuf, buf& inputBuf, double resizeKoef)
 	{
-		// it's can work better if we add filter. which make buffer better.
 		if (resizeKoef < 0)
 		{
 			changedBuf.init(0, 0);

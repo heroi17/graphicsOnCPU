@@ -15,10 +15,18 @@ file(GLOB SOURCES
     "${CMAKE_CURRENT_SOURCE_DIR}/GraphPainter/src/*.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/GraphPainter/include/*.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/GraphPainter/linker.h"
+    "${CMAKE_CURRENT_SOURCE_DIR}/GraphPainter/graph.h"
     "${CMAKE_CURRENT_SOURCE_DIR}/main.cpp"
 )
-#"graphics/include/GMath.h" "GraphPainter/include/GraphObject.h" "GraphPainter/linker.h" "GraphPainter/include/GraphDraw.h" "GraphPainter/include/GraphPainter.h" "GraphPainter/src/GraphObject.cpp"
-add_executable(graphics ${SOURCES}  )
+
+add_executable(graphics ${SOURCES})
+
+add_custom_command(
+    TARGET ${PROJECT_NAME} POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/GraphExamples ${CMAKE_CURRENT_BINARY_DIR}/GraphExamples
+    COMMENT "Copying test directory to build directory"
+)
+
 if (CMAKE_VERSION VERSION_GREATER 3.12)
   set_property(TARGET graphics PROPERTY CXX_STANDARD 20)
 endif()

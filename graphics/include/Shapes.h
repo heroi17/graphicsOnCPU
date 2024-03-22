@@ -153,10 +153,10 @@ namespace shapesLib
         int rad_sq = radius * radius;
         int YStart = (radius < center.y_) ? -radius : -center.y_;
         int YEnd = (buffer.getHeight() - radius > center.y_) ? radius : buffer.getHeight() - center.y_;
-        for (float y = YStart; y <= YEnd; y++)
+        for (float y = YStart; y <= round(YEnd); y++)
         {
             double current_rad = sqrt(rad_sq - y * y);
-            buffer.blitSegment(int(y + center.y_), ceil(center.x_ - current_rad), (float)(center.x_ + current_rad), fillColor);
+            buffer.blitSegment(round(y + center.y_), ceil(center.x_ - current_rad), (float)(center.x_ + current_rad), fillColor);
         }
         circle(buffer, center, radius, lineColor);
     }
@@ -182,9 +182,9 @@ namespace shapesLib
         float YStart = (0 > topLeft.y_) ? 0 : topLeft.y_;
         float YEnd = (buffer.getHeight() < topLeft.y_ + widthHeight.y_) ? buffer.getHeight() : topLeft.y_ + widthHeight.y_;
 
-        for (size_t y = (int)YStart; y < (int)YEnd; y++)
+        for (size_t y = round(YStart); y < round(YEnd); y++)
         {
-            buffer.blitSegment(y, XStart, XEnd, fillColor);
+            buffer.blitSegment(y, round(XStart), round(XEnd), fillColor);
         }
         rectangle(buffer, topLeft, widthHeight, lineColor);
     }

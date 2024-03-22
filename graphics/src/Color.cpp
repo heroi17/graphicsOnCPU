@@ -43,21 +43,19 @@ namespace colorLib
 		float newGreen = (green2 * alpha2 + green1 * (1.f - alpha2));
 		float newBlue = (blue2 * alpha2 + blue1 * (1.f - alpha2));
 
-		this->alphaChannel_ = (uint8_t)(newAlpha * 255.f);
-		this->redChannel_ = (uint8_t)(newRed * 255.f);
-		this->greenChannel_ = (uint8_t)(newGreen * 255.f);
-		this->blueChannel_ = (uint8_t)(newBlue * 255.f);
+		this->alphaChannel_ =	(A8)(newAlpha * 255.f);
+		this->redChannel_ =		(R8)(newRed * 255.f);
+		this->greenChannel_ =	(G8)(newGreen * 255.f);
+		this->blueChannel_ =	(B8)(newBlue * 255.f);
 
 	}
 
 	RGBA8 RGBA8::mulAlpha(const float changeAlphaCoef)
 	{
-		//TODO: remove if > 1 becouse ve add cut_up if it'll be out of 255.
-		if (changeAlphaCoef < 0) return RGBA8();		// Bad coefficient.
-		if (changeAlphaCoef > 1) return RGBA8(*this);	// Bad coefficient.
-
+		if (changeAlphaCoef < 0) return RGBA8();
 		RGBA8 helper = RGBA8(*this);
-		helper.alphaChannel_ = (A8)(helper.alphaChannel_ * changeAlphaCoef);
+		uint32_t newAlphaChannel = helper.alphaChannel_ * changeAlphaCoef;
+		helper.alphaChannel_ = (A8)CUT_UP(newAlphaChannel, 255);
 		return helper;
 	}
 
@@ -80,7 +78,7 @@ namespace colorLib
 	}
 	RGBA8 RGBA8::operator*(const float changeCoef)
 	{
-		if (changeCoef < 0) return RGBA8();		// Bad coefficient.
+		if (changeCoef < 0) return RGBA8();
 		// TODO: add vectorization here.
 		RGBA8 helper = RGBA8(0, 0, 0, 0);
 		uint newRedChannel = ((uint)redChannel_) * changeCoef;

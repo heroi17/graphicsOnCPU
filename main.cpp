@@ -2,10 +2,12 @@
 //
 
 #include "graphics/graphics.h"
-#include<windows.h>
-#include<iostream>
+#include "GraphPainter/graph.h"
+#include <windows.h>
+#include <iostream>
 #include <cmath>
 #include <thread>
+
 template <typename color>
 int output(bufferLib::Buffer2D<color>& buf)
 {
@@ -25,7 +27,7 @@ int output(bufferLib::Buffer2D<color>& buf)
 	return 0;
 }
 
-int main()
+int test1()
 {
 	int width = 200;
 	int height = 200;
@@ -70,5 +72,47 @@ int main()
 		drawBuffer2D::blitOn(myBuf, myBuf3, gMathLib::Vector2D<int>(width / 2, height / 2), true);
 		std::this_thread::sleep_for(std::chrono::milliseconds(250));
 	}
+	return 0;
+}
+
+int main()
+{
+	//test1();
+	using  S = graphDrawLib::settings;
+	GraphObjectLib::GraphObject myGraph = GraphObjectLib::GraphObject();
+	switch (myGraph.loadGraph("GraphExamples/GraphTest4.txt"))
+	{
+	case (GraphObjectLib::ERROR_GRAPH_FILE::GRAPH_FILE_INVALID_SIMBOLOS):
+	{
+		std::cout << "invalid data";
+		return 0;
+	}
+	case (GraphObjectLib::ERROR_GRAPH_FILE::GRAPH_FILE_NO_EXIST):
+	{
+		std::cout << "File No Exist";
+		return 0;
+	}
+	}
+	auto settings = graphDrawLib::GraphDrawSettings<colorLib::RGBA8>(S::NO_DRAW_NUMIRATION);
+	auto myBuf = bufferLib::Buffer2D<colorLib::RGBA8>(100, 100);
+	auto myBufBig = bufferLib::Buffer2D<colorLib::RGBA8>(1, 1);
+	while (true)
+	{
+		{
+		graphToolsLib::GraphSolver solwerGraph;
+		solwerGraph.init(std::move(myGraph));
+		for (int i = 0; i <	10; i++)
+		{
+		solwerGraph.solve();
+		}
+		myGraph = std::move(solwerGraph);//(or we can do this, but compiler do not like it) solwerGraph.get(myGraph);
+		} 
+		graphDrawLib::drawGraph(myBuf, myGraph, settings);
+		specialLib::changeResolution(myBufBig, myBuf, 1);
+		output(myBufBig);
+	}
+
+	std::cin.get();
+
 	return 0;
 }

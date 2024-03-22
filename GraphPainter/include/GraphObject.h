@@ -9,7 +9,7 @@ namespace GraphObjectLib
 	{
 		GRAPH_FILE_OK,
 		GRAPH_FILE_NO_EXIST,
-		GRAPH_FILE_INVALID_SIMBOLOS,//if there will be wrong format. maybe wrong simbols.
+		GRAPH_FILE_INVALID_SIMBOLOS
 	};
 	struct GraphObject
 	{
@@ -19,7 +19,7 @@ namespace GraphObjectLib
 		bool _isInit = false;
 	public:
 		GraphObject(GraphObject&& other) noexcept;
-
+		GraphObject() = default;
 		GraphObject& operator=(GraphObject&& other) noexcept;
 
 		ERROR_GRAPH_FILE loadGraph(const std::string& filename);
@@ -29,6 +29,12 @@ namespace GraphObjectLib
 		void freeGraph();
 
 		bool isCorrectGraphData();
+
+		void print();
+		//for incapsulating read.
+		const std::vector<gMathLib::Vector2D<float>>& getGraphNodes() const {return graphNodes;}
+
+		const std::vector<std::pair<int, int>>& getNodeLinks() const {return nodeLinks;}
 	};
 }
 
