@@ -13,11 +13,19 @@ namespace graphToolsLib
 	};
 	class GraphSolver: public GraphObjectLib::GraphObject
 	{
+	private:
+		GRAPH_SOLVER_ERROR solveBySprings();
+
 	public:
 
 		GRAPH_SOLVER_ERROR init(GraphObjectLib::GraphObject&& toSolveGraph);
 
-		GRAPH_SOLVER_ERROR solve();
+		GRAPH_SOLVER_ERROR solve()
+		{
+			for (int i = 0; i < 30; i++)
+				solveBySprings();
+			return solveBySprings();
+		}
 
 		GRAPH_SOLVER_ERROR get(GraphObjectLib::GraphObject& getGraph);
 	};

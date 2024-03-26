@@ -24,7 +24,7 @@ namespace graphToolsLib
 
     }
 
-    GRAPH_SOLVER_ERROR GraphSolver::solve()
+    GRAPH_SOLVER_ERROR GraphSolver::solveBySprings()
     {
         if (!this->isInit()) return GRAPH_SOLVER_ERROR::GRAPH_NO_INIT;
         //TODO: make solution.
@@ -58,6 +58,7 @@ namespace graphToolsLib
         }
         return GRAPH_SOLVER_ERROR::GRAPH_SOLWER_OK;
     }
+
 
     GRAPH_SOLVER_ERROR GraphSolver::get(GraphObjectLib::GraphObject& getGraph)
     {

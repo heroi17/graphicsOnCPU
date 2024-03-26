@@ -19,7 +19,7 @@ file(GLOB SOURCES
     "${CMAKE_CURRENT_SOURCE_DIR}/main.cpp"
 )
 
-add_executable(graphics ${SOURCES})
+add_executable(graphics ${SOURCES} "SaveModule/include/saveBuffer.h" "SaveModule/linker.h" "SaveModule/include/libbmp.h" "SaveModule/include/libbmp.cpp" "SaveModule/saveModule.h")
 
 add_custom_command(
     TARGET ${PROJECT_NAME} POST_BUILD

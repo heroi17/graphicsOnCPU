@@ -2,7 +2,7 @@
 #include <iostream>
 #include <fstream>
 #include <string>
-#define RANDOM(toRandomize) toRandomize = (std::rand()%212) * 0.1
+#define RANDOM(toRandomize) toRandomize = (std::rand()%2121) * 0.1
 namespace GraphObjectLib
 {
 

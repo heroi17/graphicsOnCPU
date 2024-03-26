@@ -3,14 +3,27 @@
 
 #include "graphics/graphics.h"
 #include "GraphPainter/graph.h"
-#include <windows.h>
+#include "SaveModule/saveModule.h"
 #include <iostream>
 #include <cmath>
 #include <thread>
+#include <filesystem>
+#if defined (_WIN32)
+	#define _ON_WINDOWS_
+	#include <windows.h>
+#endif
+inline bool ends_with(std::string const& value, std::string const& ending)
+{
+	if (ending.size() > value.size()) return false;
+	return std::equal(ending.rbegin(), ending.rend(), value.rbegin());
+}
+
+using recursive_directory_iterator = std::filesystem::recursive_directory_iterator;
 
 template <typename color>
 int output(bufferLib::Buffer2D<color>& buf)
 {
+#ifdef _ON_WINDOWS_
 	//Get a console handle
 	HWND myconsole = GetConsoleWindow();
 	//Get a handle to device context
@@ -24,11 +37,15 @@ int output(bufferLib::Buffer2D<color>& buf)
 			SetPixel(mydc, xPos, yPos, RGB(pix.getRed(), pix.getGreen(), pix.getBlue()));
 		}
 	}
+
+#endif // ON_WINDOWS
+
 	return 0;
 }
 
 int test1()
 {
+#ifdef _ON_WINDOWS_
 	int width = 200;
 	int height = 200;
 	auto myBuf = bufferLib::Buffer2D<colorLib::RGBA8>(width, height);
@@ -72,15 +89,16 @@ int test1()
 		drawBuffer2D::blitOn(myBuf, myBuf3, gMathLib::Vector2D<int>(width / 2, height / 2), true);
 		std::this_thread::sleep_for(std::chrono::milliseconds(250));
 	}
+#endif // ON_WINDOWS
 	return 0;
 }
 
-int main()
+int test2()
 {
 	//test1();
 	using  S = graphDrawLib::settings;
 	GraphObjectLib::GraphObject myGraph = GraphObjectLib::GraphObject();
-	switch (myGraph.loadGraph("GraphExamples/GraphTest4.txt"))
+	switch (myGraph.loadGraph("GraphExamples/GraphTest5.txt"))
 	{
 	case (GraphObjectLib::ERROR_GRAPH_FILE::GRAPH_FILE_INVALID_SIMBOLOS):
 	{
@@ -94,14 +112,14 @@ int main()
 	}
 	}
 	auto settings = graphDrawLib::GraphDrawSettings<colorLib::RGBA8>(S::NO_DRAW_NUMIRATION);
-	auto myBuf = bufferLib::Buffer2D<colorLib::RGBA8>(100, 100);
+	auto myBuf = bufferLib::Buffer2D<colorLib::RGBA8>(500, 500);
 	auto myBufBig = bufferLib::Buffer2D<colorLib::RGBA8>(1, 1);
 	while (true)
 	{
 		{
 		graphToolsLib::GraphSolver solwerGraph;
 		solwerGraph.init(std::move(myGraph));
-		for (int i = 0; i <	10; i++)
+		for (int i = 0; i <	100; i++)
 		{
 		solwerGraph.solve();
 		}
@@ -114,5 +132,47 @@ int main()
 
 	std::cin.get();
 
+	return 0;
+}
+
+
+int main()
+{
+	//test2();
+	using  S = graphDrawLib::settings;
+	GraphObjectLib::GraphObject myGraph = GraphObjectLib::GraphObject();
+
+
+	auto settings = graphDrawLib::GraphDrawSettings<colorLib::RGBA8>(S::NO_DRAW_NUMIRATION);
+	auto myBuf = bufferLib::Buffer2D<colorLib::RGBA8>(500, 500);
+	for (const auto& dirEntry : recursive_directory_iterator("GraphExamples/"))
+	{
+		std::string outfilename = dirEntry.path().string();
+		
+		if (!ends_with(outfilename, ".txt")) continue;
+
+		if (GraphObjectLib::ERROR_GRAPH_FILE::GRAPH_FILE_OK != myGraph.loadGraph(outfilename))
+		{
+			std::cout << outfilename << "(problem with graph contains)\n";
+			continue;
+		}
+		myBuf.init(100, 100);
+		for (int jjj = 0; jjj < 40;jjj++)
+		{
+			{
+				graphToolsLib::GraphSolver solwerGraph;
+				solwerGraph.init(std::move(myGraph));
+				solwerGraph.solve();
+				myGraph = std::move(solwerGraph);//(or we can do this, but compiler do not like it) solwerGraph.get(myGraph);
+			}
+			graphDrawLib::drawGraph(myBuf, myGraph, settings);
+			output(myBuf);
+		}
+		myBuf.init(1000, 1000);
+		graphDrawLib::drawGraph(myBuf, myGraph, settings);
+		sBufLib::save(myBuf, outfilename.substr(0, outfilename.size() - 4) + ".bmp");
+		std::cout << "\"" << outfilename << "\"is saved." << std::endl;
+	}
+	std::cin.get();
 	return 0;
 }
