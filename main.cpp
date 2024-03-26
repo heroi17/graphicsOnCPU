@@ -150,10 +150,10 @@ int main()
 		std::string outfilename = dirEntry.path().string();
 		
 		if (!ends_with(outfilename, ".txt")) continue;
-
-		if (GraphObjectLib::ERROR_GRAPH_FILE::GRAPH_FILE_OK != myGraph.loadGraph(outfilename))
+		GraphObjectLib::ERROR_GRAPH_FILE ans;
+		if (GraphObjectLib::ERROR_GRAPH_FILE::GRAPH_FILE_OK != (ans = myGraph.loadGraph(outfilename)))
 		{
-			std::cout << outfilename << "(problem with graph contains)\n";
+			std::cout << outfilename << "(problem with graph contains): exceptions(" << ans << ")\n";
 			continue;
 		}
 		myBuf.init(100, 100);

@@ -2,7 +2,7 @@
 #include <iostream>
 #include <fstream>
 #include <string>
-#define RANDOM(toRandomize) toRandomize = (std::rand()%2121) * 0.1
+#define RANDOM(toRandomize) toRandomize = (std::rand()%212) * 0.1
 namespace GraphObjectLib
 {
 
@@ -25,6 +25,7 @@ namespace GraphObjectLib
 
 	ERROR_GRAPH_FILE GraphObjectLib::GraphObject::loadGraph(const std::string& filename)
 	{
+		this->nodeLinks.clear();
 		std::string line;
 		std::vector<int> data;
 		std::ifstream GraphTxtFile(filename);
@@ -51,7 +52,6 @@ namespace GraphObjectLib
 			this->nodeLinks.clear();
 			return ERROR_GRAPH_FILE::GRAPH_FILE_INVALID_SIMBOLOS;
 		}
-
 		GraphTxtFile.close();
 		_isInit = true;
 		return ERROR_GRAPH_FILE::GRAPH_FILE_OK;
