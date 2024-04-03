@@ -146,7 +146,7 @@ int main()
 	
 	
 	
-	auto myBuf = bufferLib::Buffer2D<colorLib::RGBA8>(500, 500);
+	auto myBuf = bufferLib::Buffer2D<colorLib::RGBA8>(250, 250);
 	for (const auto& dirEntry : recursive_directory_iterator("GraphExamples/"))
 	{
 		std::string outfilename = dirEntry.path().string();
@@ -170,11 +170,43 @@ int main()
 			graphDrawLib::drawGraph(myBuf, myGraph, settings);
 			output(myBuf);
 		}
-		myBuf.init(1000, 1000);
+		myBuf.init(250, 250);
 		graphDrawLib::drawGraph(myBuf, myGraph, settings);
 		sBufLib::save(myBuf, outfilename.substr(0, outfilename.size() - 4) + ".bmp");
 		std::cout << "\"" << outfilename << "\"is saved." << std::endl;
 	}
 	std::cin.get();
+	return 0;
+}
+
+int test()
+{
+
+	auto myBuf = bufferLib::Buffer2D<colorLib::RGBA8>(250, 250);
+	myBuf.init(250, 250);
+
+
+
+	auto myGraph = GraphObjectLib::GraphObject();
+	std::string outfilename = "GraphExamples/GraphTest1.txt";
+
+	if (GraphObjectLib::ERROR_GRAPH_FILE ans; GraphObjectLib::ERROR_GRAPH_FILE::GRAPH_FILE_OK != (ans = myGraph.loadGraph(outfilename)))
+	{
+		std::cout << outfilename << "(problem with graph contains): exceptions(" << ans << ")\n";
+		return 0;
+	}
+		
+	graphToolsLib::GraphSolver solwerGraph;
+
+	solwerGraph.init(std::move(myGraph));
+	for (int jjj = 0; jjj < 40; jjj++) solwerGraph.solve();
+	myGraph = std::move(solwerGraph);
+
+
+
+	auto settings = graphDrawLib::GraphDrawSettings<colorLib::RGBA8>(graphDrawLib::settings::NO_DRAW_NUMIRATION);//flags for draw(graph).
+	graphDrawLib::drawGraph(myBuf, myGraph, settings);
+	sBufLib::save(myBuf, "GraphExamples/bufferExample.bmp");
+	std::cout << "\"" << outfilename << "\"is saved." << std::endl;
 	return 0;
 }
