@@ -28,9 +28,7 @@ namespace colorLib
 		A8 alphaChannel_= 0;
 	public:
 
-		RGBA8() {};
-
-		RGBA8(R8 red, G8 green, B8 blue, A8 alpha);
+		RGBA8(R8 red = 0, G8 green = 0, B8 blue = 0, A8 alpha = 0);
 
 		RGBA8(const RGBA8& other) = default;
 		RGBA8(uint32_t intLike);

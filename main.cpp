@@ -138,12 +138,14 @@ int test2()
 
 int main()
 {
-	//test2();
 	using  S = graphDrawLib::settings;
 	GraphObjectLib::GraphObject myGraph = GraphObjectLib::GraphObject();
 
 
-	auto settings = graphDrawLib::GraphDrawSettings<colorLib::RGBA8>(S::NO_DRAW_NUMIRATION);
+	auto settings = graphDrawLib::GraphDrawSettings<colorLib::RGBA8>(S::NO_DRAW_NUMIRATION);//flags for draw(graph).
+	
+	
+	
 	auto myBuf = bufferLib::Buffer2D<colorLib::RGBA8>(500, 500);
 	for (const auto& dirEntry : recursive_directory_iterator("GraphExamples/"))
 	{
@@ -163,7 +165,7 @@ int main()
 				graphToolsLib::GraphSolver solwerGraph;
 				solwerGraph.init(std::move(myGraph));
 				solwerGraph.solve();
-				myGraph = std::move(solwerGraph);//(or we can do this, but compiler do not like it) solwerGraph.get(myGraph);
+				myGraph = std::move(solwerGraph);
 			}
 			graphDrawLib::drawGraph(myBuf, myGraph, settings);
 			output(myBuf);

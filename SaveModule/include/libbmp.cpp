@@ -1,6 +1,7 @@
 /* Copyright 2016 - 2017 Marc Volker Dickmann
  * Project: LibBMP
  */
+//start code part
 #include <fstream>
 #include <cmath>
 #include "libbmp.h"
@@ -194,3 +195,7 @@ enum BmpError
 	f_img.close();
 	return BMP_OK;
 }
+//end code part
+/* Copyright 2016 - 2017 Marc Volker Dickmann
+ * Project: LibBMP
+ */

@@ -1,3 +1,7 @@
+/* Copyright 2016 - 2017 Marc Volker Dickmann
+ * Project: LibBMP
+ */
+ //start code part
 #pragma once
 #ifndef __LIBBMP_H__
 #define __LIBBMP_H__
@@ -101,3 +105,7 @@ private:
 };
 
 #endif /* __LIBBMP_H__ */
+//end code part
+/* Copyright 2016 - 2017 Marc Volker Dickmann
+ * Project: LibBMP
+ */
